@@ -188,9 +188,7 @@ fi
 echo "Install finished..."
 echo
 echo "Apply the theme with:"
-echo "  plasma-apply-lookandfeel -a com.github.yeyushengfan258.Win11OS-dark"
-echo "  plasma-apply-colorscheme Win11OSDark"
-echo "  systemctl --user restart plasma-plasmashell   # re-read the desktop theme"
+echo "  ./apply.sh dark     # or: ./apply.sh light"
 echo
 echo "The global theme ships a Windows 11 style taskbar layout. When applying it"
 echo "from System Settings, tick \"Use default layout\" to get the panel with"

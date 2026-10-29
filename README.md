@@ -28,8 +28,9 @@ The theme was originally written for Plasma 5. It now works on Plasma 6
   `<use>` elements were deleted; buttons and frame rendering are correct again.
 - **Kvantum theme selection**. `widgetStyle=kvantum` only selects the engine;
   the concrete theme is read from `~/.config/Kvantum/kvantum.kvconfig`. The
-  installer now writes `theme=Win11OS-dark` when no theme is configured, so Qt
-  applications are no longer unstyled.
+  installer now writes `theme=Win11OS-dark` when no theme is configured, and
+  `apply.sh` keeps that key in sync when you switch variants — otherwise a
+  switch to the light theme would leave Dolphin and other Qt applications dark.
 - **SDDM 6.0 support**. The QML themes used `org.kde.plasma.plasma5support`
   (Plasma 5 only) to read the Caps Lock state. They now use
   `org.kde.plasma.private.keyboardindicator.KeyState`, and `Login.qml` no
@@ -80,19 +81,36 @@ sudo ./install.sh
 
 ## Apply
 
+Apply the dark or light variant:
+
+```sh
+./apply.sh dark
+./apply.sh light
+```
+
+`apply.sh` applies the global theme, the matching color scheme **and** cursor
+theme, and updates the Kvantum theme key in
+`~/.config/Kvantum/kvantum.kvconfig` — applying only the global theme leaves the
+previous Kvantum theme active, which is why Qt applications such as Dolphin and
+System Settings would stay dark after switching to the light variant. Restart
+already running Qt applications afterwards so they reload the new Kvantum theme.
+
+The equivalent manual commands are:
+
 ```sh
 plasma-apply-lookandfeel -a com.github.yeyushengfan258.Win11OS-dark
 plasma-apply-colorscheme Win11OSDark
-systemctl --user restart plasma-plasmashell   # reload the desktop theme
+plasma-apply-cursortheme Win10OS-cursors
+kwriteconfig6 --file ~/.config/Kvantum/kvantum.kvconfig --group General --key theme Win11OS-dark
+qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.refreshCurrentShell
 ```
-
-To use the light variant, apply `com.github.yeyushengfan258.Win11OS-light` and
-`Win11OSLight` instead. Applying the global theme from *System Settings → Global
-Theme* and ticking **Use default layout** also recreates the Windows 11 taskbar
-(start menu, centred tasks, system tray and clock).
 
 If the panel still looks unstyled, log out and back in once so kwin and
 plasmashell reload the Aurorae theme and the desktop theme.
+
+Applying the global theme from *System Settings → Global Theme* and ticking
+**Use default layout** also recreates the Windows 11 taskbar (start menu, centred
+tasks, system tray and clock).
 
 ## Uninstall
 
